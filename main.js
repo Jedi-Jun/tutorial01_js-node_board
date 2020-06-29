@@ -2,7 +2,6 @@ var http = require('http');
 var fs = require('fs');
 var url = require('url');
 var qs = require('querystring');
-const { on } = require('process');
         
 var server = http.createServer(function(request, response){
     var _url = request.url;
