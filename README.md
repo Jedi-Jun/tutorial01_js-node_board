@@ -7,6 +7,8 @@ A test for making simple website.
 ```sh
 Node.js: file system
 $ pm2 start main.js
+https://opentutorials.org/course/3332/21133
+https://www.npmjs.com/package/pm2
 ```
 
 <!--
