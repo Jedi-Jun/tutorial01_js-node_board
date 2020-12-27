@@ -1,9 +1,9 @@
-var http = require('http');
-var fs = require('fs');
-var url = require('url');
-var qs = require('querystring');
-        
-var server = http.createServer(function(request, response){
+const http = require('http');
+const fs = require('fs');
+const url = require('url');
+const qs = require('querystring');
+
+const server = http.createServer(function(request, response) {
     var _url = request.url;
     var queryData = url.parse(_url, true).query;
     var pathName = url.parse(_url, true).pathname;
@@ -29,15 +29,17 @@ var server = http.createServer(function(request, response){
                </html>
                `;
     }
+
     function templateList(fileList) {
         var i = 0;
         var list = ``;
-        for (i; i < fileList.length; i++){
+        for (i; i < fileList.length; i++) {
             list = list + `<li><a href="/?id=${fileList[i]}">${fileList[i]}</a></li>`;
         }
         list = `<ol>${list}</ol>`;
         return list;
     }
+
     function templateControl(create, update, del) {
         return `
         <div sytle="text-align:center">
@@ -50,17 +52,17 @@ var server = http.createServer(function(request, response){
         </div>
         `
     }
-   
-    if(pathName === '/'){
+
+    if(pathName === '/') {
         // [fs.readdir]
         // Read all files at a specific address and return the values in array.
-        fs.readdir('./data', 'utf8', function(err, fileList){
+        fs.readdir('./data', 'utf8', function(err, fileList) {
             if(err) throw err;
             var list = templateList(fileList);
             // [fs.readFile]
             // Read the text from each file and reflect it on the main page.
-            fs.readFile(`./data/${title}`, function(err, description){
-                if(description === undefined){
+            fs.readFile(`./data/${title}`, function(err, description) {
+                if(description === undefined) {
                     title = "Welcome";
                     description = "Welcome!";
                     control = templateControl('', 'disabled', 'disabled');
@@ -75,8 +77,8 @@ var server = http.createServer(function(request, response){
                 }
             });
         });
-    } else if(pathName === '/create'){
-        fs.readdir('./data', 'utf8', function(err, fileList){
+    } else if(pathName === '/create') {
+        fs.readdir('./data', 'utf8', function(err, fileList) {
             // if(err) throw err;
             var list = templateList(fileList);
             var title = 'CREATE';
@@ -97,26 +99,26 @@ var server = http.createServer(function(request, response){
             response.writeHead(200);
             response.end(template);
         });
-    } else if (pathName === "/process_create"){
+    } else if (pathName === "/process_create") {
         var body ='';
-        request.on('data', function(data){
+        request.on('data', function(data) {
             body += data;
         });
-        request.on('end', function(){
+        request.on('end', function() {
             var post = qs.parse(body);
             var title = post.title;
             var description = post.description;
             // [fs.appendFile]
             // Same as writeFile. The function is to literally to create a file.
-            fs.appendFile(`./data/${title}`, description, 'utf8', function(err){
+            fs.appendFile(`./data/${title}`, description, 'utf8', function(err) {
                 response.writeHead(302, {Location: `/?id=${qs.escape(title)}`});
                 response.end();
             });
         });
-    } else if(pathName === "/update"){
+    } else if(pathName === "/update") {
         // var title= queryData.id
-        fs.readdir(`./data`, 'utf8', function(err, fileList){
-            fs.readFile(`./data/${title}`, function(err, description){
+        fs.readdir(`./data`, 'utf8', function(err, fileList) {
+            fs.readFile(`./data/${title}`, function(err, description) {
             var list = templateList(fileList);
             var control = templateControl('disabled', '', 'disabled');
             var template = templateHTML(title, list, control, `
@@ -137,32 +139,32 @@ var server = http.createServer(function(request, response){
             response.end(template);
             });
         });
-    } else if(pathName === "/process_update"){
+    } else if(pathName === "/process_update") {
         var body ='';
-        request.on('data', function(data){
+        request.on('data', function(data) {
             body += data;
         });
-        request.on('end', function(){
+        request.on('end', function() {
             var post = qs.parse(body);
             var id = post.id;
             var title = post.title;
             var description = post.description;
-            fs.rename(`./data/${id}`, `./data/${title}`, function(err){
-                fs.writeFile(`./data/${title}`, description, function(err){
+            fs.rename(`./data/${id}`, `./data/${title}`, function(err) {
+                fs.writeFile(`./data/${title}`, description, function(err) {
                     response.writeHead(302, {Location: `/?id=${qs.escape(title)}`});
                     response.end();
                 });
             });
         });
-    } else if(pathName === "/process_delete"){
+    } else if(pathName === "/process_delete") {
         var body = '';
-        request.on('data', function(data){
+        request.on('data', function(data) {
             body += data;
         });
-        request.on('end', function(){
+        request.on('end', function() {
             var post = qs.parse(body);
             var id = post.id;
-            fs.unlink(`./data/${id}`, function(err){
+            fs.unlink(`./data/${id}`, function(err) {
                 response.writeHead(302, {Location: '/'});
                 response.end();
             })
@@ -172,4 +174,5 @@ var server = http.createServer(function(request, response){
         response.end('Page Error');
     }
 });
+
 server.listen(3000);
