@@ -6,7 +6,7 @@ A test for making simple website.
 
 ```sh
 Node.js: file system
-
+$ pm2 start main.js
 ```
 
 <!--
