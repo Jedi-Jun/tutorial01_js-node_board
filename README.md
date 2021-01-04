@@ -2,10 +2,10 @@
 
 A test for making simple website. 
 
-## Env: JavaScript, Node.js
+## Env: HTML + Node.js + FileSystem
 
 ```sh
-Node.js: file system
+DB: FileSystem(Node.js)
 $ pm2 start main.js
 $ pm2 start main.js --watch --no-daemon
 https://opentutorials.org/course/3332/21133
